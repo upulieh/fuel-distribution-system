@@ -1,0 +1,11 @@
+server:
+  port: 8192
+  
+spring:
+  data:
+    mongodb:
+      uri: #add this
+      database: inventory #creates if it doesn't exist
+      
+  kafka:
+    bootstrap-servers: localhost:9092
