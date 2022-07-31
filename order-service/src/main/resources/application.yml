@@ -4,5 +4,8 @@ server:
 spring:
   data:
     mongodb:
-      uri: #add mongodb url here
+      uri: #add this
       database: orders #creates if it doesn't exist
+      
+  kafka:
+    bootstrap-servers: localhost:9092
