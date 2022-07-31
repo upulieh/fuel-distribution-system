@@ -1,0 +1,10 @@
+.metadata/
+
+### STS ###
+*/.classpath
+*/.project
+*/.settings
+*/.mvn/wrapper/maven-wrapper.jar
+*/.mvn/wrapper/maven-wrapper.properties
+*/target/
+
