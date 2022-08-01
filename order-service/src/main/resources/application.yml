@@ -1,11 +1,16 @@
 server:
   port: 8191
   
+######Primary Mongo DB###########
 spring:
   data:
     mongodb:
-      uri: #add this
+      uri: 
       database: orders #creates if it doesn't exist
       
   kafka:
     bootstrap-servers: localhost:9092
+    consumer:
+      group-id: cpc
+      
+      

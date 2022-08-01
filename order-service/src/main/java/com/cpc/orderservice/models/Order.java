@@ -1,12 +1,10 @@
 package com.cpc.orderservice.models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,9 +45,9 @@ public class Order {
 	private boolean delivered; // delivered to the station
 	private LocalDateTime deliveredTime;
 
-//	public Order() {
-//
-//	}
+	public Order() {
+
+	}
 
 	public Order(String id, String stationId, FuelType fuelType, Quantity quantity, boolean reserved,
 			LocalDateTime reservedTime, boolean allocated, LocalDateTime allocatedTime, boolean scheduled,
