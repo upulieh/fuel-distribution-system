@@ -26,8 +26,6 @@ public class OrderServiceImpl implements OrderService {
 		order.setId(createdRefId);
 		order.setReservedTime(LocalDateTime.now());
 		order.setReserved(true);
-
-		// kafka integration should happen here
 		return orderRepository.save(order);
 	}
 
@@ -90,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private String updateDeliveredField(Order order) {
-		//check for any exceptions
+		//check for any db exceptions
 		order.setDelivered(true);
 		order.setDeliveredTime(LocalDateTime.now());
 		orderRepository.save(order);
