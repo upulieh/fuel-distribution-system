@@ -1,7 +1,6 @@
 server:
   port: 8191
   
-######Primary Mongo DB###########
 spring:
   data:
     mongodb:

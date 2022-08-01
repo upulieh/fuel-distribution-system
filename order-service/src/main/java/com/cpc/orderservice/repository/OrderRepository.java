@@ -6,4 +6,5 @@ import org.springframework.data.mongodb.repository.Query;
 import com.cpc.orderservice.models.Order;
 
 public interface OrderRepository extends MongoRepository<Order, String>{
+	
 }
