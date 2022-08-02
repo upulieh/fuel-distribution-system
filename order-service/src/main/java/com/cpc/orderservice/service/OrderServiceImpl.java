@@ -105,21 +105,21 @@ public class OrderServiceImpl implements OrderService {
 	
 	//emitted from inventory service
 	@Override
-	public String updateOrderAllocation(String id) {
+	public Order updateOrderAllocation(String id) {
 		Optional<Order> order = orderRepository.findById(id);
 		
 		if (order.isPresent()) {
 			return updateAllocatedField(order.get());
 		} else {
-			return "Error occured while fetching the order from the db";
+			return null; //handle null in controller
 		}
 	}
 
-	private String updateAllocatedField(Order order) {
+	private Order updateAllocatedField(Order order) {
 		// update values in inventory db
 		order.setAllocated(true);
 		order.setAllocatedTime(LocalDateTime.now());
 		Order o = orderRepository.save(order); //return this?
-		return "Quota Allocated successfully!";
+		return o;
 	}
 }

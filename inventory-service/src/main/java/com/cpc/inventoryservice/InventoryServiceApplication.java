@@ -28,7 +28,8 @@ public class InventoryServiceApplication {
     @Bean
     CommandLineRunner initializeInventory() {
         return args -> {
-    		inventoryController.initializeInventory(13_100,0); //// initial stock  - 50 000 litres, initial emergency allocation - 0 
+            // initial stock  - 50 000 litres, initial emergency allocation - 0 (for each fuel type)
+    		inventoryController.initializeInventory(50_000,0,50_000,0,50_000,0,50_000,0);  
     		InventoryServiceApplication.logger.info("inventory-service :Initialized inventory");
         };
     }

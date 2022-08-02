@@ -35,8 +35,8 @@ public class InventoryController {
 
 		// create Quota and save it
 		Quota quota = new Quota(LocalDateTime.now().toString(), order.getId());
+		Quota q = quotaService.submitQuotaRecord(quota, order.getQuantity(), order.getFuelType());
 
-		Quota q = quotaService.submitQuotaRecord(quota, order.getQuantity());
 		if (q == null) {
 			// not enough stock
 			InventoryServiceApplication.logger
@@ -47,13 +47,14 @@ public class InventoryController {
 			// success
 			// change order db inventory value to true (order service through kafka)
 			inventoryKafkaTemplate.send("inventorySubmitTopic", "Order for " + order.getId() + " allocated", order);
-			InventoryServiceApplication.logger
-					.info("inventory-service : Updated the order and quota values to :" + order);
 		}
-
 	}
 
-	public void initializeInventory(int initialQuantity,int emergencyAllocation) {
-		quotaService.initializeInventory(initialQuantity, emergencyAllocation);
+	public void initializeInventory(int initialQuantityO92, int emergencyAllocationO92, int initialQuantityO95,
+			int emergencyAllocationO95, int initialQuantityRD, int emergencyAllocationRD, int initialQuantitySD,
+			int emergencyAllocationSD) {
+		quotaService.initializeInventory(initialQuantityO92, emergencyAllocationO92, initialQuantityO95,
+				emergencyAllocationO95, initialQuantityRD, emergencyAllocationRD, initialQuantitySD,
+				emergencyAllocationSD);
 	}
 }

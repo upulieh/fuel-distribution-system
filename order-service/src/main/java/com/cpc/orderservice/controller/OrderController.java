@@ -41,8 +41,9 @@ public class OrderController {
 	@PostMapping // to expose to post requests in kafka
 	public Order submitOrder(@RequestBody Order order) {
 		Order o = orderService.submitOrder(order.getStationId(), order);
-		orderKafkaTemplate.send("orderSubmitTopic","Kafka : Submitted order "+ o.getId() +" to orderSubmitTopic", o); // to kafka
-		OrderServiceApplication.logger.info("order-service : Submitted order "+o.getId()+" to orderSubmitTopic");
+		orderKafkaTemplate.send("orderSubmitTopic", "Kafka : Submitted order " + o.getId() + " to orderSubmitTopic", o); // to
+																															// kafka
+		OrderServiceApplication.logger.info("order-service : Submitted order " + o.getId() + " to orderSubmitTopic");
 		return o;
 	}
 
@@ -51,7 +52,7 @@ public class OrderController {
 	@RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
 	public String checkOrderStatus(@PathVariable(value = "id") String id) {
 		String status = orderService.checkOrderStatus(id);
-		OrderServiceApplication.logger.info("order-service : Status for "+ id+" is : "+status);
+		OrderServiceApplication.logger.info("order-service : Status for " + id + " is : " + status);
 		return status;
 	}
 
@@ -60,10 +61,10 @@ public class OrderController {
 	@RequestMapping(value = "/orders/{id}", method = RequestMethod.POST)
 	public String confirmOrderReceival(@PathVariable(value = "id") String id) {
 		String status = orderService.confirmOrderReceival(id);
-		OrderServiceApplication.logger.info("order-service : Confirmed order receival of "+ id);
+		OrderServiceApplication.logger.info("order-service : Confirmed order receival of " + id);
 		return status;
 	}
-	
+
 	// retreive all orders
 	// GET, http://localhost:8191/services/orders
 	@RequestMapping(value = "/orders", method = RequestMethod.GET)
@@ -71,21 +72,27 @@ public class OrderController {
 		List<Order> orders = orderService.fetchAllOrders();
 
 		if (orders == null) {
-			//ResponseEntity.notFound().build();
+			// ResponseEntity.notFound().build();
 			return "Order list is empty.";
 		} else {
-			//ResponseEntity.ok().body(customers);
+			// ResponseEntity.ok().body(customers);
 			OrderServiceApplication.logger.info("order-service : Fetching all orders");
 			return orders;
 		}
 	}
-	
-	//listening to inventory server for order allocation
+
+	// listening to inventory server for order allocation
 	@KafkaListener(topics = "inventorySubmitTopic", groupId = "cpc", containerFactory = "inventoryKafkaListenerContainerFactory")
 	void listener(Order order) {
 
-		// chanage order db inventory value to true (calling order service)
-		orderService.updateOrderAllocation(order.getId());
-		OrderServiceApplication.logger.info("order-service : Updated allocation status on order-service to: "+order);
+		// change order db inventory value to true (calling order service)
+		Order o = orderService.updateOrderAllocation(order.getId());
+		if (o == null) {
+			OrderServiceApplication.logger.info("order-service : (From inventory service) Error in updating order allocation status");
+		} else {
+			// update successful
+			OrderServiceApplication.logger.info("order-service : (From inventory service) Updated allocation status on order-service to: " + o);
+		}
+
 	}
 }
