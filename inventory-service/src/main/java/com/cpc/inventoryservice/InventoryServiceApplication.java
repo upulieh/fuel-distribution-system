@@ -24,12 +24,11 @@ public class InventoryServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
 	}
-	
-	// adding the initial stock on the inventory as 50 000 litres	
+		
     @Bean
     CommandLineRunner initializeInventory() {
         return args -> {
-    		inventoryController.initializeInventory();
+    		inventoryController.initializeInventory(13_100,0); //// initial stock  - 50 000 litres, initial emergency allocation - 0 
     		InventoryServiceApplication.logger.info("inventory-service :Initialized inventory");
         };
     }

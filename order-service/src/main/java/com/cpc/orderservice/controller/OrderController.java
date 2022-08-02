@@ -83,10 +83,9 @@ public class OrderController {
 	//listening to inventory server for order allocation
 	@KafkaListener(topics = "inventorySubmitTopic", groupId = "cpc", containerFactory = "inventoryKafkaListenerContainerFactory")
 	void listener(Order order) {
-		OrderServiceApplication.logger.info("order-service : Order allocations submitted from inventory service : "+order);
 
 		// chanage order db inventory value to true (calling order service)
 		orderService.updateOrderAllocation(order.getId());
-		OrderServiceApplication.logger.info("order-service : Updated allocation status on order-service");
+		OrderServiceApplication.logger.info("order-service : Updated allocation status on order-service to: "+order);
 	}
 }

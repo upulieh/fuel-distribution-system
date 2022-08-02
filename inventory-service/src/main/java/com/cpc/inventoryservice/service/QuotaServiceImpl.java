@@ -12,11 +12,11 @@ import com.cpc.orderservice.models.Quantity;
 
 @Service
 public class QuotaServiceImpl implements QuotaService {
-	
+
 	@Autowired
 	QuotaRepository quotaRepository;
 
-	public Quota submitQuotaRecord(Quota newQuota, Quantity quantityEnum, Integer latestAvailableQuantity) {
+	public Quota submitQuotaRecord(Quota newQuota, Quantity quantityEnum) {
 
 		// set quota's quantity
 		Integer quantityInL = 0;
@@ -39,21 +39,30 @@ public class QuotaServiceImpl implements QuotaService {
 		Quota previousQuota = quotaRepository.retrieveFinalQuota();
 
 		// calculate and assign the quota values
-		newQuota.setAllocatedQuotaSum(previousQuota.getAllocatedQuotaSum() + quantityInL);
-		newQuota.setAvailableQuantity(previousQuota.getAvailableQuantity() - quantityInL);
+		Integer allocatedSum = previousQuota.getAllocatedQuotaSum();
+		Integer availableQuantity = previousQuota.getAvailableQuantity();
 
-		InventoryServiceApplication.logger.info("inventory-service :Quota changed from "+previousQuota+" to "+newQuota);
+		if (availableQuantity < quantityInL) {
+			// can't allocate if not enough stock
+			return null; // check for null in controller
+		} else {
+			newQuota.setAllocatedQuotaSum(allocatedSum + quantityInL);
+			newQuota.setAvailableQuantity(availableQuantity - quantityInL);
 
-		return quotaRepository.save(newQuota);
+			InventoryServiceApplication.logger
+					.info("inventory-service :Quota changed from " + previousQuota + " to " + newQuota);
+
+			return quotaRepository.save(newQuota);
+		}
 	}
-	
-	public void initializeInventory() {
-		Quota initialQuota=new Quota(LocalDateTime.now().toString(),"00000000");
-		
-		//	setting the initial allocatedQuotaSum and availableQuantity
-		initialQuota.setAllocatedQuotaSum(0);
-		initialQuota.setAvailableQuantity(50_000);
-		
+
+	public void initializeInventory(int initialQuantity,int emergencyAllocation) {
+		Quota initialQuota = new Quota(LocalDateTime.now().toString(), "00000000");
+
+		// setting the initial allocatedQuotaSum and availableQuantity
+		initialQuota.setAllocatedQuotaSum(emergencyAllocation);
+		initialQuota.setAvailableQuantity(initialQuantity);
+
 		Quota q = quotaRepository.save(initialQuota);
 	}
 }
