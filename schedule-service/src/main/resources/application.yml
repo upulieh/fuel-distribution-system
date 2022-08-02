@@ -1,0 +1,13 @@
+server:
+  port: 8193
+  
+spring:
+  data:
+    mongodb:
+      uri: 
+      database: schedule #creates if it doesn't exist
+      
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: cpc
