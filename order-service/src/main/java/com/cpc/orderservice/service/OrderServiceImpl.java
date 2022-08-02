@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
 		} else if (o.isScheduled()) {
 			// is scheduled
 			LocalDateTime scheduleDateTime = o.getScheduledTime();
-			return "Is scheduled on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(scheduleDateTime) + " at "
+			return "Is scheduled to " + (DateTimeFormatter.ISO_LOCAL_DATE).format(scheduleDateTime) + " at "
 					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(scheduleDateTime);
 		} else if (o.isAllocated()) {
 			// is allocated
@@ -116,10 +116,27 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private Order updateAllocatedField(Order order) {
-		// update values in inventory db
 		order.setAllocated(true);
 		order.setAllocatedTime(LocalDateTime.now());
 		Order o = orderRepository.save(order); //return this?
+		return o;
+	}
+	
+	//emitted from schedule service
+	@Override
+	public Order updateOrderSchedule(String id,LocalDateTime scheduledDateTime) {
+		Optional<Order> order = orderRepository.findById(id);
+		
+		if (order.isPresent()) {
+			return updateScheduleField(order.get(),scheduledDateTime);
+		} else {
+			return null; //handle null in controller
+		}
+	}
+	private Order updateScheduleField(Order order,LocalDateTime scheduledDateTime) {
+		order.setScheduled(true);
+		order.setScheduledTime(scheduledDateTime); 
+		Order o = orderRepository.save(order); 
 		return o;
 	}
 }

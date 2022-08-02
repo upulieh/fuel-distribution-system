@@ -30,7 +30,7 @@ public class InventoryController {
 
 	// Since we have multiple listener containers, we are specifying which container
 	// factory to use.
-	@KafkaListener(topics = "orderSubmitTopic", groupId = "cpc", containerFactory = "orderKafkaListenerContainerFactory")
+	@KafkaListener(topics = "orderCreateTopic", groupId = "cpc", containerFactory = "inventoryKafkaListenerContainerFactory")
 	void listener(Order order) {
 
 		// create Quota and save it

@@ -1,6 +1,7 @@
 package com.cpc.orderservice.service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.cpc.orderservice.models.Order;
@@ -10,5 +11,6 @@ public interface OrderService {
 	String checkOrderStatus(String id);
 	String confirmOrderReceival(String id);
 	List<Order> fetchAllOrders(); 
-	Order updateOrderAllocation(String id); //emitted from inventory server
+	Order updateOrderAllocation(String id); //emitted from inventory service
+	Order updateOrderSchedule(String id,LocalDateTime scheduledDateTime); //emitted from schedule service
 }

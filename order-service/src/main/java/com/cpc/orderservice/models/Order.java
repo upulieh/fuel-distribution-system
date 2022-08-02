@@ -14,20 +14,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 @Document("orders") // mongodb collection name
 public class Order {
 
-//	String station
-//	FuelType fuelType
-//	Quantity quantity
-//	boolean reserved
-//	LocalDateTime reservedTime
-//	boolean allocated
-//	LocalDateTime allocatedTime
-//	boolean scheduled
-//	LocalDateTime scheduledTime
-//	boolean dispatched
-//	LocalDateTime dispatchedTime
-//	boolean delivered
-//	LocalDateTime deliveredTime
-
 	@Id
 	private String id; // reference id
 

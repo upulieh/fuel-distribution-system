@@ -14,26 +14,32 @@ public class KafkaTopicConfig {
 	// registers a NewTopic bean for each topic to the application context.
 	// If the topic already exists, the bean will be ignored.
 	@Bean
-	public NewTopic getNewOrderSubmitTopic() {
-		OrderServiceApplication.logger.info("orderser-service :Created orderSubmitTopic topic");
-		return TopicBuilder.name("orderSubmitTopic").build();
+	public NewTopic getNewOrderCreateTopic() {
+		OrderServiceApplication.logger.info("order-service :Created orderCreateTopic topic");
+		return TopicBuilder.name("orderCreateTopic").build();
 	}
 
 	@Bean
 	public NewTopic getNewInventorySubmitTopic() {
-		OrderServiceApplication.logger.info("orderser-service :Created inventorySubmitTopic topic");
+		OrderServiceApplication.logger.info("order-service : Created inventorySubmitTopic topic");
 		return TopicBuilder.name("inventorySubmitTopic").build();
 	}
-
+	
+	@Bean
+	public NewTopic getNewScheduleCreateTopic() {
+		OrderServiceApplication.logger.info("order-service : Created scheduleCreateTopic topic");
+		return TopicBuilder.name("scheduleCreateTopic").build();
+	}
+	
 	@Bean
 	public NewTopic getNewScheduleSubmitTopic() {
-		OrderServiceApplication.logger.info("orderser-service :Created scheduleSubmitTopic topic");
+		OrderServiceApplication.logger.info("order-service : Created scheduleSubmitTopic topic");
 		return TopicBuilder.name("scheduleSubmitTopic").build();
 	}
 
 	@Bean
 	public NewTopic getNewDispatchSubmitTopic() {
-		OrderServiceApplication.logger.info("orderser-service :Created dispatchSubmitTopic topic");
+		OrderServiceApplication.logger.info("order-service : Created dispatchSubmitTopic topic");
 		return TopicBuilder.name("dispatchSubmitTopic").build();
 	}
 }

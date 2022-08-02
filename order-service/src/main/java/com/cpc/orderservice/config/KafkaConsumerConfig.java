@@ -33,7 +33,7 @@ class KafkaConsumerConfig {
 	}
 
 	@Bean
-	public ConsumerFactory<String, Order> inventoryConsumerFactory() {
+	public ConsumerFactory<String, Order> orderConsumerFactory() {
 		// Spring Kafka provides JsonSerializer and JsonDeserializer implementations
 		// that are based on the Jackson JSON object mapper.
 		// It allows us to convert any Java object to bytes[]
@@ -42,9 +42,9 @@ class KafkaConsumerConfig {
 	}
 
 	@Bean
-	public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Order>> inventoryKafkaListenerContainerFactory() {
+	public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Order>> orderKafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, Order> factory = new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConsumerFactory(inventoryConsumerFactory());
+		factory.setConsumerFactory(orderConsumerFactory());
 		return factory;
 	}
 }

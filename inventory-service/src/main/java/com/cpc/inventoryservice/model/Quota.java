@@ -138,4 +138,19 @@ public class Quota {
 		this.availableQuantitySD = availableQuantitySD;
 	}
 
+	public Quota(String timeStamp, String orderId, Integer allocatedQuotaSumO92, Integer availableQuantityO92,
+			Integer allocatedQuotaSumO95, Integer availableQuantityO95, Integer allocatedQuotaSumRD,
+			Integer availableQuantityRD, Integer allocatedQuotaSumSD, Integer availableQuantitySD) {
+		this.timeStamp = timeStamp;
+		this.orderId = orderId;
+		this.allocatedQuotaSumO92 = allocatedQuotaSumO92;
+		this.availableQuantityO92 = availableQuantityO92;
+		this.allocatedQuotaSumO95 = allocatedQuotaSumO95;
+		this.availableQuantityO95 = availableQuantityO95;
+		this.allocatedQuotaSumRD = allocatedQuotaSumRD;
+		this.availableQuantityRD = availableQuantityRD;
+		this.allocatedQuotaSumSD = allocatedQuotaSumSD;
+		this.availableQuantitySD = availableQuantitySD;
+	}
+
 }

@@ -41,8 +41,8 @@ public class OrderController {
 	@PostMapping // to expose to post requests in kafka
 	public Order submitOrder(@RequestBody Order order) {
 		Order o = orderService.submitOrder(order.getStationId(), order);
-		orderKafkaTemplate.send("orderSubmitTopic", "Kafka : Submitted order " + o.getId() + " to orderSubmitTopic", o); // to
-																															// kafka
+		orderKafkaTemplate.send("orderCreateTopic", "Kafka : Submitted order " + o.getId() + " to orderSubmitTopic", o); 
+																															
 		OrderServiceApplication.logger.info("order-service : Submitted order " + o.getId() + " to orderSubmitTopic");
 		return o;
 	}
@@ -82,17 +82,34 @@ public class OrderController {
 	}
 
 	// listening to inventory server for order allocation
-	@KafkaListener(topics = "inventorySubmitTopic", groupId = "cpc", containerFactory = "inventoryKafkaListenerContainerFactory")
-	void listener(Order order) {
-
+	@KafkaListener(topics = "inventorySubmitTopic", groupId = "cpc", containerFactory = "orderKafkaListenerContainerFactory")
+	void inventoryListener(Order order) {
+		//stop passing the whole object here
 		// change order db inventory value to true (calling order service)
-		Order o = orderService.updateOrderAllocation(order.getId());
+		Order o = orderService.updateOrderAllocation(order.getId()); //here
 		if (o == null) {
 			OrderServiceApplication.logger.info("order-service : (From inventory service) Error in updating order allocation status");
 		} else {
 			// update successful
-			OrderServiceApplication.logger.info("order-service : (From inventory service) Updated allocation status on order-service to: " + o);
+			OrderServiceApplication.logger.info("order-service : (From inventory service) Updated allocation status to: " + o);
+			
+			//send order details to scheduleSubmitTopic (schedule service)
+			//add a timer here
+			orderKafkaTemplate.send("scheduleCreateTopic", "Kafka : Submitted order " + o.getId() + " to scheduleSubmitTopic", o);
 		}
-
+	}
+	
+	// listening to schedule server for order scheduling
+	@KafkaListener(topics = "scheduleSubmitTopic", groupId = "cpc", containerFactory = "orderKafkaListenerContainerFactory")
+	void scheduleListener(Order order) {
+		//stop passing the whole object here
+		// change order db inventory value to true (calling order service)
+		Order o = orderService.updateOrderSchedule(order.getId(),order.getScheduledTime()); 
+		if (o == null) {
+			OrderServiceApplication.logger.info("order-service : (From schedule service) Error in updating order schedule status");
+		} else {
+			// update successful
+			OrderServiceApplication.logger.info("order-service : (From schedule service) Updated schedule status to: " + o);
+		}
 	}
 }
