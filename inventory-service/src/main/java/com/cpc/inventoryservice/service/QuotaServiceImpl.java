@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cpc.inventoryservice.InventoryServiceApplication;
 import com.cpc.inventoryservice.model.Quota;
 import com.cpc.inventoryservice.repository.QuotaRepository;
 import com.cpc.orderservice.models.Quantity;
 
 @Service
 public class QuotaServiceImpl implements QuotaService {
+	
 	@Autowired
 	QuotaRepository quotaRepository;
 
@@ -36,13 +38,11 @@ public class QuotaServiceImpl implements QuotaService {
 		// return the final record's value
 		Quota previousQuota = quotaRepository.retrieveFinalQuota();
 
-		System.out.println("previous quota :" + previousQuota);
-
 		// calculate and assign the quota values
 		newQuota.setAllocatedQuotaSum(previousQuota.getAllocatedQuotaSum() + quantityInL);
 		newQuota.setAvailableQuantity(previousQuota.getAvailableQuantity() - quantityInL);
 
-		System.out.println("current quota :" + newQuota);
+		InventoryServiceApplication.logger.info("inventory-service :Quota changed from "+previousQuota+" to "+newQuota);
 
 		return quotaRepository.save(newQuota);
 	}

@@ -1,6 +1,7 @@
-package com.cpc.orderservice.config;
+package com.cpc.inventoryservice.config;
 
 import java.util.HashMap;
+
 
 import java.util.Map;
 
@@ -40,13 +41,13 @@ class KafkaProducerConfig {
 	// key - String - name
 	// value - String - you can change this to whatever the object you want to pass
 	@Bean
-	public ProducerFactory<String, Order> orderProducerFactory() {
+	public ProducerFactory<String, Order> inventoryProducerFactory() {
 		return new DefaultKafkaProducerFactory<>(producerConfigs());
 	}
 
 //	KafkaTemplate helps us to send messages to their respective topic
 	@Bean
-	public KafkaTemplate<String, Order> orderKafkaTemplate() {
-		return new KafkaTemplate<>(orderProducerFactory());
+	public KafkaTemplate<String, Order> inventoryKafkaTemplate() {
+		return new KafkaTemplate<>(inventoryProducerFactory());
 	}
 }

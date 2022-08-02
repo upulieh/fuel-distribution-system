@@ -1,8 +1,8 @@
 package com.cpc.orderservice.service;
 
 import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cpc.orderservice.OrderServiceApplication;
 import com.cpc.orderservice.models.Order;
 import com.cpc.orderservice.repository.OrderRepository;
 
@@ -100,5 +101,25 @@ public class OrderServiceImpl implements OrderService {
 		List<Order> orders = (List<Order>)orderRepository.findAll();
 		//any all order related editing can be done here
 		return orders;
+	}
+	
+	//emitted from inventory service
+	@Override
+	public String updateOrderAllocation(String id) {
+		Optional<Order> order = orderRepository.findById(id);
+		
+		if (order.isPresent()) {
+			return updateAllocatedField(order.get());
+		} else {
+			return "Error occured while fetching the order from the db";
+		}
+	}
+
+	private String updateAllocatedField(Order order) {
+		// update values in inventory db
+		order.setAllocated(true);
+		order.setAllocatedTime(LocalDateTime.now());
+		Order o = orderRepository.save(order); //return this?
+		return "Quota Allocated successfully!";
 	}
 }

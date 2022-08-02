@@ -10,4 +10,5 @@ public interface OrderService {
 	String checkOrderStatus(String id);
 	String confirmOrderReceival(String id);
 	List<Order> fetchAllOrders(); 
+	String updateOrderAllocation(String id); //emitted from inventory server
 }
