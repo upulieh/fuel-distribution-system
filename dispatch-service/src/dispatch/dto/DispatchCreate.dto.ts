@@ -1,6 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
 
 export class DispatchCreateDto {
+  constructor() {}
+
   @IsNotEmpty()
   orderId: string;
   @IsNotEmpty()

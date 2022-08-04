@@ -14,4 +14,17 @@ export class DispatchService {
   async create(dispatchCreateDto: DispatchCreateDto): Promise<Dispatch> {
     return await this.dispatchRepository.create(dispatchCreateDto);
   }
+
+  setDateValues(d: number[]): Date {
+    //[ 2022, 8, 4, 19, 25, 21, 764327200 ]
+    let date: Date = new Date();
+    date.setFullYear(d[0]);
+    date.setMonth(d[1]);
+    date.setDate(d[2]);
+    date.setHours(d[3]);
+    date.setMinutes(d[4] + 1);
+    date.setSeconds(d[5]);
+    date.setMilliseconds(d[6]);
+    return date;
+  }
 }

@@ -6,11 +6,13 @@ export type DispatchDocument = Dispatch & Document;
 @Schema()
 export class Dispatch {
   @Prop()
-  orderId: string;
+  id: string;
   @Prop()
-  station: string;
+  stationId: string;
   @Prop()
-  amount: string;
+  quantity: string;
+  @Prop()
+  scheduledDate: Date;
 }
 
 export const DispatchSchema = SchemaFactory.createForClass(Dispatch);
