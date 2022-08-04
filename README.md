@@ -8,7 +8,8 @@ A sample fuel distribution system for placing, managing and checking status on f
 4. Dispatch service
 
 
-## User Interfaces (using React)
+## User Interfaces (cpc-client)
+* A React frontend project
 1. To submit an order request -> to order service endpoint1
 2. To check the status of a particular order by giving the reference id 
 3. To submit the confimation of the order receival
