@@ -15,6 +15,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class DispatchController {
   constructor(private dispatchService: DispatchService) {}
 
+  //get - http://localhost:8194/dispatch
   @Get()
   @UsePipes(ValidationPipe)
   async getAllDispatches(): Promise<Dispatch[]> {

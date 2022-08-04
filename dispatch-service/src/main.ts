@@ -3,6 +3,8 @@ import { Transport, MicroserviceOptions } from '@nestjs/microservices'; //for sp
 import { appendFile } from 'fs';
 import { AppModule } from './app.module';
 
+const cors = require('cors');
+
 //starting point of the server
 async function bootstrap() {
   //kafka configs
@@ -38,6 +40,7 @@ async function bootstrap() {
       },
     },
   });
+  app.use(cors({ origin: ['http://localhost:3000'] }));
   await app.startAllMicroservices();
   await app.listen(8194, () => 'dispatch-service started.....'); //port to make the REST request
 }

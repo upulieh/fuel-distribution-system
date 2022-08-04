@@ -1,16 +1,30 @@
-import Nav from './components/Nav';
-import MainContainer from './components/MainContainer';
+import React from 'react';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './pages/Layout';
+import Home from './pages/Home';
+import OrderSubmit from './pages/OrderSubmit';
+import OrderStatus from './pages/OrderStatus';
+import OrderReceival from './pages/OrderReceival';
+import Dispatches from './pages/Dispatches';
+import NoPage from './pages/NoPage';
 
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <Nav />
-      <MainContainer />
-      <p>asdfasf</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="submit" element={<OrderSubmit />} />
+          <Route path="status" element={<OrderStatus />} />
+          <Route path="confirm" element={<OrderReceival />} />
+          <Route path="dispatches" element={<Dispatches />} />
+          <Route path="*" element={<NoPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
 export default App;
