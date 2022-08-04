@@ -6,5 +6,6 @@ endpoint 4 - view all order, all over
 
 acts as a producer in Kafka, sending messages to the Kafka server (for a specific topic)
 
-Setup
+
+### Running the app
 1. run the Kafka server
