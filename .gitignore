@@ -8,3 +8,8 @@
 */.mvn/wrapper/maven-wrapper.properties
 */target/
 */HELP.md
+
+### NestJS ###
+*/node_modules
+*/dist
+*/.prettierrc
