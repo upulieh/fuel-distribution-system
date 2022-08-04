@@ -19,6 +19,7 @@ public class QuotaServiceImpl implements QuotaService {
 
 	public Quota submitQuotaRecord(Quota newQuota, Quantity quantityEnum, FuelType fuelType) {
 
+		//issue in this method, not checking null for all values before saving in the inventory
 		// set quota's quantity
 		Integer quantityInL = 0;
 

@@ -5,7 +5,7 @@ spring:
   data:
     mongodb:
       uri: 
-      database: orders #creates if it doesn't exist
+      database: order #creates if it doesn't exist
       
   kafka:
     bootstrap-servers: localhost:9092
