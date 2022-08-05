@@ -12,7 +12,19 @@ export class DispatchService {
   }
 
   async create(dispatchCreateDto: DispatchCreateDto): Promise<Dispatch> {
-    return await this.dispatchRepository.create(dispatchCreateDto);
+    const dispatch = new Dispatch();
+    dispatch.orderId = dispatchCreateDto.orderId;
+    dispatch.stationId = dispatchCreateDto.stationId;
+    dispatch.quantity = dispatchCreateDto.quantity;
+    dispatch.scheduledDate = dispatchCreateDto.scheduledDate;
+
+    // console.log('In create ' + dispatch);
+
+    return await this.dispatchRepository.create(dispatch);
+  }
+
+  async setDispatchStatus(id: string): Promise<Dispatch> {
+    return await this.dispatchRepository.setDispatchStatus(id);
   }
 
   setDateValues(d: number[]): Date {

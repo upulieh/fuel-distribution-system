@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -21,6 +23,15 @@ export class DispatchController {
   async getAllDispatches(): Promise<Dispatch[]> {
     console.log('Fetching all Dispatches');
     return await this.dispatchService.getAll();
+  }
+
+  //post - http://localhost:8194/dispatch with JSON payload with id field
+  @Post()
+  async setOrderStatus(@Body() body) {
+    //to kafka (for order service)
+    //next thing to do
+    //on dispatch db
+    return await this.dispatchService.setDispatchStatus(body.stationId);
   }
 
   //kafka listener

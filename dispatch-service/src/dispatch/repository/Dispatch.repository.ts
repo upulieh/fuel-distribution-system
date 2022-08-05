@@ -11,12 +11,25 @@ export class DispatchRepository {
   ) {}
 
   //create a dispatch record on db
-  async create(dispatchCreateDto: DispatchCreateDto): Promise<Dispatch> {
-    let newDispatch = new this.dispatchModel(dispatchCreateDto);
+  async create(dispatch: Dispatch): Promise<Dispatch> {
+    let newDispatch = new this.dispatchModel(dispatch);
     return await newDispatch.save();
   }
 
   async findAll(): Promise<Dispatch[]> {
     return await this.dispatchModel.find();
+  }
+
+  async setDispatchStatus(id: string): Promise<Dispatch> {
+    console.log('Setting order dispatched status ' + id);
+
+    const filter = { id: id };
+    const update = { dispatchedDate: new Date() };
+
+    const record = await this.dispatchModel.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+    // console.log(record);
+    return record;
   }
 }

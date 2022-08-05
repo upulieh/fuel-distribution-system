@@ -6,7 +6,9 @@ export class DispatchCreateDto {
   @IsNotEmpty()
   orderId: string;
   @IsNotEmpty()
-  station: string;
+  stationId: string;
   @IsNotEmpty()
-  amount: string;
+  quantity: string;
+  @IsNotEmpty()
+  scheduledDate: Date;
 }
