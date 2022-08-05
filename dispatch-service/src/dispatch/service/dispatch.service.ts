@@ -13,12 +13,10 @@ export class DispatchService {
 
   async create(dispatchCreateDto: DispatchCreateDto): Promise<Dispatch> {
     const dispatch = new Dispatch();
-    dispatch.orderId = dispatchCreateDto.orderId;
+    dispatch.id = dispatchCreateDto.id;
     dispatch.stationId = dispatchCreateDto.stationId;
     dispatch.quantity = dispatchCreateDto.quantity;
     dispatch.scheduledDate = dispatchCreateDto.scheduledDate;
-
-    // console.log('In create ' + dispatch);
 
     return await this.dispatchRepository.create(dispatch);
   }

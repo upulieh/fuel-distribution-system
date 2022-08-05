@@ -4,7 +4,7 @@ export class DispatchCreateDto {
   constructor() {}
 
   @IsNotEmpty()
-  orderId: string;
+  id: string;
   @IsNotEmpty()
   stationId: string;
   @IsNotEmpty()

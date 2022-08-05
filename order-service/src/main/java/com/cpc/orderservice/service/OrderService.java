@@ -13,4 +13,5 @@ public interface OrderService {
 	List<Order> fetchAllOrders(); 
 	Order updateOrderAllocation(String id); //emitted from inventory service
 	Order updateOrderSchedule(String id,LocalDateTime scheduledDateTime); //emitted from schedule service
+	Order updateOrderDispatch(String id,LocalDateTime dispatchedDateTime); //emitted from dispatch service
 }

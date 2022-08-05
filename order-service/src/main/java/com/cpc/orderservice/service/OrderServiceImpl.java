@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public String confirmOrderReceival(String id){
+	public String confirmOrderReceival(String id) {
 		Optional<Order> order = orderRepository.findById(id);
 		if (order.isPresent()) {
 			return updateDeliveredField(order.get());
@@ -89,54 +89,73 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private String updateDeliveredField(Order order) {
-		//check for any db exceptions
+		// check for any db exceptions
 		order.setDelivered(true);
 		order.setDeliveredTime(LocalDateTime.now());
 		orderRepository.save(order);
 		return "Receival is confirmed. Thank you!";
-	} 
-	
+	}
+
 	@Override
 	public List<Order> fetchAllOrders() {
-		List<Order> orders = (List<Order>)orderRepository.findAll();
-		//any all order related editing can be done here
+		List<Order> orders = (List<Order>) orderRepository.findAll();
+		// any all order related editing can be done here
 		return orders;
 	}
-	
-	//emitted from inventory service
+
+	// emitted from inventory service
 	@Override
 	public Order updateOrderAllocation(String id) {
 		Optional<Order> order = orderRepository.findById(id);
-		
+
 		if (order.isPresent()) {
 			return updateAllocatedField(order.get());
 		} else {
-			return null; //handle null in controller
+			return null; // handle null in controller
 		}
 	}
 
 	private Order updateAllocatedField(Order order) {
 		order.setAllocated(true);
 		order.setAllocatedTime(LocalDateTime.now());
-		Order o = orderRepository.save(order); //return this?
+		Order o = orderRepository.save(order); // return this?
 		return o;
 	}
-	
-	//emitted from schedule service
+
+	// emitted from schedule service
 	@Override
-	public Order updateOrderSchedule(String id,LocalDateTime scheduledDateTime) {
+	public Order updateOrderSchedule(String id, LocalDateTime scheduledDateTime) {
 		Optional<Order> order = orderRepository.findById(id);
-		
+
 		if (order.isPresent()) {
-			return updateScheduleField(order.get(),scheduledDateTime);
+			return updateScheduleField(order.get(), scheduledDateTime);
 		} else {
-			return null; //handle null in controller
+			return null; // todo - handle null in controller
 		}
 	}
-	private Order updateScheduleField(Order order,LocalDateTime scheduledDateTime) {
+
+	private Order updateScheduleField(Order order, LocalDateTime scheduledDateTime) {
 		order.setScheduled(true);
-		order.setScheduledTime(scheduledDateTime); 
-		Order o = orderRepository.save(order); 
+		order.setScheduledTime(scheduledDateTime);
+		Order o = orderRepository.save(order);
+		return o;
+	}
+
+	@Override
+	public Order updateOrderDispatch(String id, LocalDateTime dispatchedDateTime) {
+		Optional<Order> order = orderRepository.findById(id);
+
+		if (order.isPresent()) {
+			return updateDispatchField(order.get(), dispatchedDateTime);
+		} else {
+			return null; // todo - handle null in controller
+		}
+	}
+	
+	private Order updateDispatchField(Order order, LocalDateTime dispatchedDateTime) {
+		order.setDispatched(true);
+		order.setDispatchedTime(dispatchedDateTime);
+		Order o = orderRepository.save(order);
 		return o;
 	}
 }

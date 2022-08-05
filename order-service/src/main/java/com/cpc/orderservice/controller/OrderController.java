@@ -1,5 +1,6 @@
 package com.cpc.orderservice.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class OrderController {
 	@PostMapping // to expose to post requests in kafka
 	public Order submitOrder(@RequestBody Order order) {
 		Order o = orderService.submitOrder(order.getStationId(), order);
-		orderKafkaTemplate.send("orderCreateTopic", "Kafka : Submitted order " + o.getId() + " to orderSubmitTopic", o); 
-																															
+		orderKafkaTemplate.send("orderCreateTopic", "Kafka : Submitted order " + o.getId() + " to orderSubmitTopic", o);
+
 		OrderServiceApplication.logger.info("order-service : Submitted order " + o.getId() + " to orderSubmitTopic");
 		return o;
 	}
@@ -82,32 +83,54 @@ public class OrderController {
 	// listening to inventory server for order allocation
 	@KafkaListener(topics = "inventorySubmitTopic", groupId = "cpc", containerFactory = "orderKafkaListenerContainerFactory")
 	void inventoryListener(Order order) {
-		//stop passing the whole object here
+		// stop passing the whole object here
 		// change order db inventory value to true (calling order service)
-		Order o = orderService.updateOrderAllocation(order.getId()); //here
+		Order o = orderService.updateOrderAllocation(order.getId()); // here
 		if (o == null) {
-			OrderServiceApplication.logger.info("order-service : (From inventory service) Error in updating order allocation status");
+			OrderServiceApplication.logger
+					.info("order-service : (From inventory service) Error in updating order allocation status");
 		} else {
 			// update successful
-			OrderServiceApplication.logger.info("order-service : (From inventory service) Updated allocation status to: " + o);
-			
-			//send order details to scheduleSubmitTopic (schedule service)
-			//add a timer here
-			orderKafkaTemplate.send("scheduleCreateTopic", "Kafka : Submitted order " + o.getId() + " to scheduleSubmitTopic", o);
+			OrderServiceApplication.logger
+					.info("order-service : (From inventory service) Updated allocation status to: " + o);
+
+			// send order details to scheduleSubmitTopic (schedule service)
+			// add a timer here
+			orderKafkaTemplate.send("scheduleCreateTopic",
+					"Kafka : Submitted order " + o.getId() + " to scheduleSubmitTopic", o);
 		}
 	}
-	
+
 	// listening to schedule server for order scheduling
 	@KafkaListener(topics = "scheduleSubmitTopic", groupId = "cpc", containerFactory = "orderKafkaListenerContainerFactory")
 	void scheduleListener(Order order) {
-		//stop passing the whole object here
+		// stop passing the whole object here
 		// change order db inventory value to true (calling order service)
-		Order o = orderService.updateOrderSchedule(order.getId(),order.getScheduledTime()); 
+		Order o = orderService.updateOrderSchedule(order.getId(), order.getScheduledTime());
 		if (o == null) {
-			OrderServiceApplication.logger.info("order-service : (From schedule service) Error in updating order schedule status");
+			OrderServiceApplication.logger
+					.info("order-service : (From schedule service) Error in updating order schedule status");
 		} else {
 			// update successful
-			OrderServiceApplication.logger.info("order-service : (From schedule service) Updated schedule status to: " + o);
+			OrderServiceApplication.logger
+					.info("order-service : (From schedule service) Updated schedule status to: " + o);
+		}
+	}
+
+	// listening to dispatch server for order dispatching
+	@KafkaListener(topics = "dispatchSubmitTopic", groupId = "cpc", containerFactory = "sOrderKafkaListenerContainerFactory")
+	void dispatchListener(String id) {
+
+		// change order db dispatched value to true
+		Order o = orderService.updateOrderDispatch(id, LocalDateTime.now());
+		// here
+		if (o == null) {
+			OrderServiceApplication.logger
+					.info("order-service : (From dispatch service) Error in updating order dispatch status");
+		} else {
+			// update successful
+			OrderServiceApplication.logger
+					.info("order-service : (From dispatch service) Updated dispatch status to: " + o);
 		}
 	}
 }

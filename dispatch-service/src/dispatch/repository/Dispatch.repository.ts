@@ -29,7 +29,6 @@ export class DispatchRepository {
     const record = await this.dispatchModel.findOneAndUpdate(filter, update, {
       new: true,
     });
-    // console.log(record);
     return record;
   }
 }

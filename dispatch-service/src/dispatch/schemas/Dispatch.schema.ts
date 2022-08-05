@@ -6,7 +6,7 @@ export type DispatchDocument = Dispatch & Document;
 @Schema()
 export class Dispatch {
   @Prop()
-  orderId: string;
+  id: string;
   @Prop()
   stationId: string;
   @Prop()
