@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cpc.orderservice.OrderServiceApplication;
@@ -53,9 +52,11 @@ public class OrderController {
 	// GET, http://localhost:8191/services/orders/{id}
 	@RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
 	public String checkOrderStatus(@PathVariable(value = "id") String id) {
-		String status = orderService.checkOrderStatus(id);
+		String trimmedId = id.trim();
+		String status = orderService.checkOrderStatus(trimmedId);
 		OrderServiceApplication.logger.info("order-service : Status for " + id + " is : " + status);
 		return status;
+
 	}
 
 	// update the "received" state of an order

@@ -26,7 +26,7 @@ function OrderView() {
       {data.length > 0 && (
         <ul>
           {data.map((d) => (
-            <li key={d._id}>
+            <li key={d.id}>
               <p>
                 id {d.id} | stationId {d.stationId} | fuelType {d.fuelType} |
                 quantity {d.quantity} | reserved{' '}

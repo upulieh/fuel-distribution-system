@@ -35,7 +35,6 @@ function Dispatches() {
     })
       .then(() => {
         console.log('refreshing page');
-        // useState
         fetchData();
       })
       .catch(function(erro) {

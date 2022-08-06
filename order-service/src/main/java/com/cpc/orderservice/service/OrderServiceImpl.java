@@ -68,28 +68,28 @@ public class OrderServiceImpl implements OrderService {
 		if (o.isDelivered()) {
 			// is delivered
 			LocalDateTime deliveredDateTime = o.getDeliveredTime();
-			return "Is delivered on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(deliveredDateTime) + " at "
-					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(deliveredDateTime);
+			return "Delivery completed on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(deliveredDateTime) + " at "
+					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(deliveredDateTime) + ". Thank you!";
 		} else if (o.isDispatched()) {
 			// is dispatched
 			LocalDateTime dispatchedDateTime = o.getDispatchedTime();
-			return "Is dispatched on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(dispatchedDateTime) + " at "
-					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(dispatchedDateTime);
+			return "Dispatching completed on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(dispatchedDateTime) + " at "
+					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(dispatchedDateTime) + ". Await delivery!";
 		} else if (o.isScheduled()) {
 			// is scheduled
 			LocalDateTime scheduleDateTime = o.getScheduledTime();
-			return "Is scheduled to " + (DateTimeFormatter.ISO_LOCAL_DATE).format(scheduleDateTime) + " at "
-					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(scheduleDateTime);
+			return "Scheduling completed on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(scheduleDateTime) + " at "
+					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(scheduleDateTime) + ". Await dispatch!";
 		} else if (o.isAllocated()) {
 			// is allocated
 			LocalDateTime allocatedDateTime = o.getAllocatedTime();
-			return "Is allocated on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(allocatedDateTime) + " at "
-					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(allocatedDateTime);
+			return "Allocation completed on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(allocatedDateTime) + " at "
+					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(allocatedDateTime) + ". Await scheduling!";
 		} else if (o.isReserved()) {
 			// is reserved
 			LocalDateTime reservedDateTime = o.getReservedTime();
-			return "Is reserved on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(reservedDateTime) + " at "
-					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(reservedDateTime);
+			return "Reservation completed on " + (DateTimeFormatter.ISO_LOCAL_DATE).format(reservedDateTime) + " at "
+					+ (DateTimeFormatter.ISO_LOCAL_TIME).format(reservedDateTime) + ". Await allocation!";
 		} else {
 			// none of the fields is true
 			return "Something went wrong...";
