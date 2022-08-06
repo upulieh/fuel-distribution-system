@@ -17,9 +17,10 @@ public class QuotaServiceImpl implements QuotaService {
 	@Autowired
 	QuotaRepository quotaRepository;
 
-	public Quota submitQuotaRecord(Quota newQuota, Quantity quantityEnum, FuelType fuelType) {
+	public Quota submitQuotaRecord(String id, Quantity quantityEnum, FuelType fuelType) {
 
-		//issue in this method, not checking null for all values before saving in the inventory
+		// issue in this method, not checking null for all values before saving in the
+		// inventory
 		// set quota's quantity
 		Integer quantityInL = 0;
 
@@ -40,83 +41,95 @@ public class QuotaServiceImpl implements QuotaService {
 		// return the final record's value
 		Quota previousQuota = quotaRepository.retrieveFinalQuota();
 
+		// update the previousQuota to create a new quota
+		previousQuota.setOrderId(id);
+		previousQuota.setTimeStamp(LocalDateTime.now().toString());
+		previousQuota.setTransactionQuantity(quantityInL);
+
 		// calculate and assign the quota values according to the fuel type
-		Integer allocatedSum = 0;
-		Integer availableQuantity = 0;
+		Integer allocatedSum = 0; // stays the same for initial record
+		Integer availableQuantity = 0; // stays the same for initial record
 
 		switch (fuelType) {
 		case OCTANE92: {
-			allocatedSum = previousQuota.getAllocatedQuotaSumo92();
-			availableQuantity = previousQuota.getAvailableQuantityO92();
+			allocatedSum = previousQuota.getAllocatedQuotaSumO92();
+			availableQuantity = previousQuota.getAvailableQuantityO92(); // is null??
 
-			if (availableQuantity < quantityInL) {
+			if ((availableQuantity - allocatedSum) < quantityInL) {
 				// can't allocate if not enough stock
 				return null; // check for null in controller
 			} else {
-				newQuota.setAllocatedQuotaSumO92(allocatedSum + quantityInL);
-				newQuota.setAvailableQuantityO92(availableQuantity - quantityInL);
+				previousQuota.setAllocatedQuotaSumO92(allocatedSum + quantityInL); // creating order only impacts
+																					// allocatedQuantity
 
-				InventoryServiceApplication.logger.info("inventory-service : Quota of Octane 92 changed from "
-						+ availableQuantity + " to " + (availableQuantity - quantityInL));
+				InventoryServiceApplication.logger
+						.info("inventory-service : AllocatedQuantitySum of Octane 92 changed from " + allocatedSum
+								+ " to " + (allocatedSum + quantityInL));
 
-				return quotaRepository.save(newQuota);
+				return quotaRepository.save(previousQuota);
 			}
 		}
 		case OCTANE95: {
 			allocatedSum = previousQuota.getAllocatedQuotaSumO95();
 			availableQuantity = previousQuota.getAvailableQuantityO95();
 
-			if (availableQuantity < quantityInL) {
+			if ((availableQuantity - allocatedSum) < quantityInL) {
 				// can't allocate if not enough stock
 				return null; // check for null in controller
 			} else {
-				newQuota.setAllocatedQuotaSumO95(allocatedSum + quantityInL);
-				newQuota.setAvailableQuantityO95(availableQuantity - quantityInL);
+				previousQuota.setAllocatedQuotaSumO95(allocatedSum + quantityInL);
 
-				InventoryServiceApplication.logger.info("inventory-service : Quota of Octane 92 changed from "
-						+ availableQuantity + " to " + (availableQuantity - quantityInL));
+				InventoryServiceApplication.logger
+						.info("inventory-service : AllocatedQuantitySum of Octane 95 changed from " + allocatedSum
+								+ " to " + (allocatedSum + quantityInL));
 
-				return quotaRepository.save(newQuota);
+				return quotaRepository.save(previousQuota);
 			}
 		}
 		case REGULAR_DIESEL: {
 			allocatedSum = previousQuota.getAllocatedQuotaSumRD();
 			availableQuantity = previousQuota.getAvailableQuantityRD();
 
-			if (availableQuantity < quantityInL) {
+			if ((availableQuantity - allocatedSum) < quantityInL) {
 				// can't allocate if not enough stock
 				return null; // check for null in controller
 			} else {
-				newQuota.setAllocatedQuotaSumRD(allocatedSum + quantityInL);
-				newQuota.setAvailableQuantityRD(availableQuantity - quantityInL);
+				previousQuota.setAllocatedQuotaSumRD(allocatedSum + quantityInL);
 
-				InventoryServiceApplication.logger.info("inventory-service : Quota of Regular Diesel changed from "
-						+ availableQuantity + " to " + (availableQuantity - quantityInL));
+				InventoryServiceApplication.logger
+						.info("inventory-service : AllocatedQuantitySum of Regular Diesel changed from " + allocatedSum
+								+ " to " + (allocatedSum + quantityInL));
 
-				return quotaRepository.save(newQuota);
+				return quotaRepository.save(previousQuota);
 			}
 		}
 		case SUPER_DIESEL: {
 			allocatedSum = previousQuota.getAllocatedQuotaSumSD();
 			availableQuantity = previousQuota.getAvailableQuantitySD();
 
-			if (availableQuantity < quantityInL) {
+			if ((availableQuantity - allocatedSum) < quantityInL) {
 				// can't allocate if not enough stock
 				return null; // check for null in controller
 			} else {
-				newQuota.setAllocatedQuotaSumSD(allocatedSum + quantityInL);
-				newQuota.setAvailableQuantitySD(availableQuantity - quantityInL);
+				previousQuota.setAllocatedQuotaSumSD(allocatedSum + quantityInL);
 
-				InventoryServiceApplication.logger.info("inventory-service : Quota of Super Diesel changed from "
-						+ availableQuantity + " to " + (availableQuantity - quantityInL));
+				InventoryServiceApplication.logger
+						.info("inventory-service : AllocatedQuantitySum of Super Diesel changed from " + allocatedSum
+								+ " to " + (allocatedSum + quantityInL));
 
-				return quotaRepository.save(newQuota);
+				return quotaRepository.save(previousQuota);
 			}
 		}
 		default: {
 			return null;
 		}
 		}
+	}
+
+	// updates the allocatedQuantity and availableQuantity fields after the dispatch
+	public Quota updateQuantities(String id) {
+		// retrieve the specific quota, given the orderId
+		return quotaRepository.retrieveSpecificRecord(id);
 	}
 
 	public void initializeInventory(int initialQuantityO92, int emergencyAllocationO92, int initialQuantityO95,

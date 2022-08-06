@@ -23,7 +23,7 @@ async function bootstrap() {
     },
   });
   app.enableCors();
-  app.use(cors({ origin: '*' })); //['http://localhost:3000']
+  app.use(cors({ origin: 'http://localhost:3000' })); //the frontend application port
   await app.startAllMicroservices();
   await app.listen(8194, () => 'dispatch-service started.....'); //port to make the REST request
 }

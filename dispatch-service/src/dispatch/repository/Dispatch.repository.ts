@@ -2,7 +2,6 @@ import { Dispatch, DispatchDocument } from './../schemas/Dispatch.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DispatchCreateDto } from '../dto/DispatchCreate.dto';
 
 @Injectable()
 export class DispatchRepository {
@@ -17,7 +16,9 @@ export class DispatchRepository {
   }
 
   async findAll(): Promise<Dispatch[]> {
-    return await this.dispatchModel.find();
+    let list = await this.dispatchModel.find({ dispatchedDate: null }); //filter out the dispatched
+    console.log('Fetching the available dispatch list');
+    return list;
   }
 
   async setDispatchStatus(id: string): Promise<Dispatch> {

@@ -6,12 +6,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Document("quota") // mongodb collection name
-public class Quota {
+public class Quota implements Cloneable {
 
 	@Id
 	private String timeStamp;
 
 	private String orderId;
+	private Integer transactionQuantity;
+
 //	OCTANE92
 	private Integer allocatedQuotaSumO92;
 	private Integer availableQuantityO92;
@@ -33,6 +35,18 @@ public class Quota {
 		this.orderId = orderId; // id of the order associated with it
 	}
 
+	// used in copying content from the final record to a new record
+	@Override
+	public Quota clone() {
+		Quota q = new Quota();
+		try {
+			q = (Quota) super.clone(); // check if it works properly
+		} catch (CloneNotSupportedException e) {
+			System.out.println("Cloning error inside Quota " + e);
+		}
+		return q;
+	}
+
 	// id
 	@JsonProperty("timeStamp")
 	public String getTimeStamp() {
@@ -42,6 +56,17 @@ public class Quota {
 	@JsonProperty("timeStamp")
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+
+	// transactionQuantity
+	@JsonProperty("transactionQuantity")
+	public Integer getTransactionQuantity() {
+		return transactionQuantity;
+	}
+
+	@JsonProperty("transactionQuantity")
+	public void setTransactionQuantity(Integer transactionQuantity) {
+		this.transactionQuantity = transactionQuantity;
 	}
 
 	@JsonProperty("orderId")
@@ -56,7 +81,7 @@ public class Quota {
 
 	// O92
 	@JsonProperty("allocatedQuotaSumO92")
-	public Integer getAllocatedQuotaSumo92() {
+	public Integer getAllocatedQuotaSumO92() {
 		return allocatedQuotaSumO92;
 	}
 
@@ -138,11 +163,13 @@ public class Quota {
 		this.availableQuantitySD = availableQuantitySD;
 	}
 
-	public Quota(String timeStamp, String orderId, Integer allocatedQuotaSumO92, Integer availableQuantityO92,
-			Integer allocatedQuotaSumO95, Integer availableQuantityO95, Integer allocatedQuotaSumRD,
-			Integer availableQuantityRD, Integer allocatedQuotaSumSD, Integer availableQuantitySD) {
+	public Quota(String timeStamp, String orderId, Integer transactionQuantity, Integer allocatedQuotaSumO92,
+			Integer availableQuantityO92, Integer allocatedQuotaSumO95, Integer availableQuantityO95,
+			Integer allocatedQuotaSumRD, Integer availableQuantityRD, Integer allocatedQuotaSumSD,
+			Integer availableQuantitySD) {
 		this.timeStamp = timeStamp;
 		this.orderId = orderId;
+		this.transactionQuantity = transactionQuantity;
 		this.allocatedQuotaSumO92 = allocatedQuotaSumO92;
 		this.availableQuantityO92 = availableQuantityO92;
 		this.allocatedQuotaSumO95 = allocatedQuotaSumO95;
@@ -151,6 +178,15 @@ public class Quota {
 		this.availableQuantityRD = availableQuantityRD;
 		this.allocatedQuotaSumSD = allocatedQuotaSumSD;
 		this.availableQuantitySD = availableQuantitySD;
+	}
+
+	@Override
+	public String toString() {
+		return "Quota [timeStamp=" + timeStamp + ", orderId=" + orderId + ", transactionQuantity=" + transactionQuantity
+				+ ", allocatedQuotaSumO92=" + allocatedQuotaSumO92 + ", availableQuantityO92=" + availableQuantityO92
+				+ ", allocatedQuotaSumO95=" + allocatedQuotaSumO95 + ", availableQuantityO95=" + availableQuantityO95
+				+ ", allocatedQuotaSumRD=" + allocatedQuotaSumRD + ", availableQuantityRD=" + availableQuantityRD
+				+ ", allocatedQuotaSumSD=" + allocatedQuotaSumSD + ", availableQuantitySD=" + availableQuantitySD + "]";
 	}
 
 }
