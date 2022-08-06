@@ -28,10 +28,13 @@ public class OrderController {
 
 	// used to inject into method params
 	private KafkaTemplate<String, Order> orderKafkaTemplate;
+	private KafkaTemplate<String, String> sOrderKafkaTemplate;
 
 	// constructor
-	public OrderController(KafkaTemplate<String, Order> orderKafkaTemplate) {
+	public OrderController(KafkaTemplate<String, Order> orderKafkaTemplate,
+			KafkaTemplate<String, String> sOrderKafkaTemplate) {
 		this.orderKafkaTemplate = orderKafkaTemplate;
+		this.sOrderKafkaTemplate = sOrderKafkaTemplate;
 	}
 
 	// submit an order
@@ -118,7 +121,7 @@ public class OrderController {
 	}
 
 	// listening to dispatch server for order dispatching
-	@KafkaListener(topics = "dispatchSubmitTopic", groupId = "cpc", containerFactory = "sOrderKafkaListenerContainerFactory")
+	@KafkaListener(topics = "dispatchSubmitTopic", groupId = "cpc", containerFactory = "sKafkaListenerContainerFactory")
 	void dispatchListener(String id) {
 
 		// change order db dispatched value to true
@@ -132,5 +135,10 @@ public class OrderController {
 			OrderServiceApplication.logger
 					.info("order-service : (From dispatch service) Updated dispatch status to: " + o);
 		}
+
+		// deduct from availableQuantity(+), deduct from allocatedQuantity(-) from
+		// inventory service
+		sOrderKafkaTemplate.send("quantityUpdateTopic", "Kafka : Submitted orderId " + id + " to quantityUpdateTopic",
+				id);
 	}
 }

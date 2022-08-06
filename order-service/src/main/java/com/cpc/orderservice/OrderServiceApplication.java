@@ -7,16 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import com.cpc.orderservice.config.KafkaTopicConfig;
-
- 
 @SpringBootApplication
 @EnableMongoRepositories
 @EntityScan("com.cpc.orderservice.models")
-public class OrderServiceApplication{
+public class OrderServiceApplication {
 
 	public static final Logger logger = LoggerFactory.getLogger(OrderServiceApplication.class);
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(OrderServiceApplication.class, args);
 	}

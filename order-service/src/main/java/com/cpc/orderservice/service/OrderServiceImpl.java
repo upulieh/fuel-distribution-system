@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cpc.orderservice.OrderServiceApplication;
+import com.cpc.orderservice.models.FuelType;
 import com.cpc.orderservice.models.Order;
 import com.cpc.orderservice.repository.OrderRepository;
 
@@ -23,17 +24,34 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order submitOrder(String stationId, Order order) {
 //		setting values for the order
-		String createdRefId = createId(stationId);
+		String createdRefId = createId(stationId, order.getFuelType());
 		order.setId(createdRefId);
 		order.setReservedTime(LocalDateTime.now());
 		order.setReserved(true);
 		return orderRepository.save(order);
 	}
 
-	private String createId(String stationId) {
+	private String createId(String stationId, FuelType fuelType) {
 		int uniqueId = (int) ((new Date().getTime() / 10000000L) % Integer.MAX_VALUE); // creating a unique value of 8
 																						// numbers
-		return stationId.substring(0, 4) + stationId.charAt(stationId.length() - 1) + uniqueId;
+
+		return stationId.substring(0, 4) + stationId.charAt(stationId.length() - 1) + uniqueId + getFId(fuelType);
+	}
+
+	private String getFId(FuelType fId) {
+		switch (fId) {
+		case OCTANE92:
+			return "92";
+		case OCTANE95:
+			return "95";
+		case REGULAR_DIESEL:
+			return "RD";
+		case SUPER_DIESEL:
+			return "SD";
+		default:
+			System.out.println("No such FuelType. Can't create fId");
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
@@ -118,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
 	private Order updateAllocatedField(Order order) {
 		order.setAllocated(true);
 		order.setAllocatedTime(LocalDateTime.now());
-		Order o = orderRepository.save(order); // return this?
+		Order o = orderRepository.save(order);
 		return o;
 	}
 
@@ -151,7 +169,7 @@ public class OrderServiceImpl implements OrderService {
 			return null; // todo - handle null in controller
 		}
 	}
-	
+
 	private Order updateDispatchField(Order order, LocalDateTime dispatchedDateTime) {
 		order.setDispatched(true);
 		order.setDispatchedTime(dispatchedDateTime);

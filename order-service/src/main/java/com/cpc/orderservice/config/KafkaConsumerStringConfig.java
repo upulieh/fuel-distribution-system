@@ -2,6 +2,7 @@ package com.cpc.orderservice.config;
 
 import java.util.HashMap;
 
+
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -15,9 +16,7 @@ import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-import com.cpc.orderservice.models.Order;
 
 @Configuration
 class SKafkaConsumerConfig {
@@ -36,14 +35,14 @@ class SKafkaConsumerConfig {
 	}
 
 	@Bean
-	public ConsumerFactory<String, String> sOrderConsumerFactory() {
+	public ConsumerFactory<String, String> sConsumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(sConsumerConfig(), new StringDeserializer(), new StringDeserializer());
 	}
 
 	@Bean
-	public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> sOrderKafkaListenerContainerFactory() {
+	public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> sKafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConsumerFactory(sOrderConsumerFactory());
+		factory.setConsumerFactory(sConsumerFactory());
 		return factory;
 	}
 }

@@ -42,4 +42,10 @@ public class KafkaTopicConfig {
 		OrderServiceApplication.logger.info("order-service : Created dispatchSubmitTopic topic");
 		return TopicBuilder.name("dispatchSubmitTopic").build();
 	}
+	
+	@Bean
+	public NewTopic getNewQuantityUpdateTopic() {
+		OrderServiceApplication.logger.info("order-service : Created quantityUpdateTopic topic");
+		return TopicBuilder.name("quantityUpdateTopic").build();
+	}
 }
