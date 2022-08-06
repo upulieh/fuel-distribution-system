@@ -20,7 +20,7 @@ function Dispatches() {
     fetchData();
   }, []);
 
-  const f = (d) => {
+  const postDispatch = (d) => {
     console.log(d);
     fetch('http://localhost:8194/dispatch', {
       method: 'POST',
@@ -32,30 +32,16 @@ function Dispatches() {
         'content-type': 'application/json',
       },
       body: JSON.stringify(d),
-    }).catch(function(erro) {
-      console.log(erro);
-    });
+    })
+      .then(() => {
+        console.log('refreshing page');
+        // useState
+        fetchData();
+      })
+      .catch(function(erro) {
+        console.log(erro);
+      });
   };
-
-  // function postDispatch(id) {
-  //   //post message to dispatch service to, be sent to order service (to change state)
-  //   console.log('Inside postDispatch ' + id);
-
-  //   const res = fetch('http://localhost:8194/dispatch', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: id,
-  //   })
-  //     .then((response) => response.json())
-  //     .then((responseJson) => {
-  //       return responseJson.movies;
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
 
   return (
     <div>
@@ -65,7 +51,7 @@ function Dispatches() {
           {data.map((d) => (
             <li key={d._id}>
               {d.stationId} | {d.quantity} |{' '}
-              <button onClick={() => f(d)}>Dispatch Order</button>
+              <button onClick={() => postDispatch(d)}>Dispatch Order</button>
             </li>
           ))}
         </ul>
